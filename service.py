@@ -353,7 +353,7 @@ def Search(item):
                     searchstring = title[-1]
                     #log(u"TITLE NULL Searchstring string = %s" % (searchstring,))
                 else:
-                    searchstring = filename
+                    searchstring = title
                     #log(u"TITLE Searchstring string = %s" % (searchstring,))
 
     PT_ON = __addon__.getSetting( 'PT' )
