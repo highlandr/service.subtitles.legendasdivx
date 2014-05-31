@@ -369,24 +369,29 @@ def Search(item):
     PTBR_ON = __addon__.getSetting( 'PTBR' )
     ES_ON = __addon__.getSetting( 'ES' )
     EN_ON = __addon__.getSetting( 'EN' )
+    LanguageDefault = False	    
     
     if 'por' in item['languages'] and PT_ON == 'true':
+        LanguageDefault = True	
         subtitles_list = getallsubs(searchstring, "pt", "Portuguese", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    elif 'por' in item['languages'] and PTBR_ON == 'true':
+    if 'por' in item['languages'] and PTBR_ON == 'true':
+        LanguageDefault = True	
         subtitles_list = getallsubs(searchstring, "pb", "Brazilian", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    elif 'spa' in item['languages'] and ES_ON == 'true':
+    if 'spa' in item['languages'] and ES_ON == 'true':
+        LanguageDefault = True	
         subtitles_list = getallsubs(searchstring, "es", "Spanish", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    elif 'eng' in item['languages'] and EN_ON == 'true':
+    if 'eng' in item['languages'] and EN_ON == 'true':
+        LanguageDefault = True	
         subtitles_list = getallsubs(searchstring, "en", "English", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    else:
+    if LanguageDefault == False:
         xbmc.executebuiltin((u'Notification(%s,%s,%d)' % (__scriptname__ , 'Only Portuguese | Portuguese Brazilian | English | Spanish.',15000)))
 
 def recursive_glob(treeroot, pattern):
