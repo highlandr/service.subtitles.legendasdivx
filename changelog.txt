@@ -1,3 +1,7 @@
+0.0.7
+- Fixed a bug that prevents searching all chosen subtitle languages.
+- Improved search algorithm for library TVSHOWS and MOVIES.
+- Added Portuguese (Brazil) missing strings.xml.
 0.0.6
 - Added new pattern to find releases with spaces instead of dots (please start using dots in the release description).
 - If there's no match with the patterns when searching for releases it will put the full description.

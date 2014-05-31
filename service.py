@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Service LegendasDivx.com version 0.0.6
+# Service LegendasDivx.com version 0.0.7
 # Code based on Undertext (FRODO) service
 # Coded by HiGhLaNdR@OLDSCHOOL
 # Ported to Gotham by HiGhLaNdR@OLDSCHOOL
@@ -44,7 +44,7 @@ __descon__ = __addon__.getSetting( 'DESC' )
 
 main_url = "http://www.legendasdivx.com/"
 debug_pretext = "LegendasDivx"
-SEARCH_PAGE_URL = main_url + "modules.php?name=Downloads&file=jz&d_op=search_next&order=&form_cat=28&page=%(page)s&query=%(query)s"
+#SEARCH_PAGE_URL = main_url + "modules.php?name=Downloads&file=jz&d_op=search_next&order=&form_cat=28&page=%(page)s&query=%(query)s"
 
 INTERNAL_LINK_URL = "plugin://%(scriptid)s/?action=download&id=%(id)s&filename=%(filename)s"
 SUB_EXTS = ['srt', 'sub', 'txt', 'aas', 'ssa', 'smi']
@@ -326,7 +326,9 @@ def Search(item):
     else:
         if tvshow != '':
             searchstring = "%s S%#02dE%#02d" % (tvshow, int(season), int(episode))
-        if tvshow == '':
+        elif title != '' and tvshow != '':
+            searchstring = title
+        else:
             if 'rar' in israr and searchstring is not None:
                 log(u"RAR Searchstring string = %s" % (searchstring,))
                 if 'cd1' in string.lower(title) or 'cd2' in string.lower(title) or 'cd3' in string.lower(title):
@@ -362,7 +364,7 @@ def Search(item):
                     searchstring = title[-1]
                     #log(u"TITLE NULL Searchstring string = %s" % (searchstring,))
                 else:
-                    searchstring = title
+                    searchstring = filename
                     #log(u"TITLE Searchstring string = %s" % (searchstring,))
 
     PT_ON = __addon__.getSetting( 'PT' )
@@ -374,19 +376,19 @@ def Search(item):
         subtitles_list = getallsubs(searchstring, "pt", "Portuguese", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    elif 'por' in item['languages'] and PTBR_ON == 'true':
+    if 'por' in item['languages'] and PTBR_ON == 'true':
         subtitles_list = getallsubs(searchstring, "pb", "Brazilian", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    elif 'spa' in item['languages'] and ES_ON == 'true':
+    if 'spa' in item['languages'] and ES_ON == 'true':
         subtitles_list = getallsubs(searchstring, "es", "Spanish", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    elif 'eng' in item['languages'] and EN_ON == 'true':
+    if 'eng' in item['languages'] and EN_ON == 'true':
         subtitles_list = getallsubs(searchstring, "en", "English", file_original_path, searchstring_notclean)
         for sub in subtitles_list:
             append_subtitle(sub)
-    else:
+    if 'eng' not in item['languages'] and 'spa' not in item['languages'] and 'por' not in item['languages'] and 'por' not in item['languages']:
         xbmc.executebuiltin((u'Notification(%s,%s,%d)' % (__scriptname__ , 'Only Portuguese | Portuguese Brazilian | English | Spanish.',15000)))
 
 def recursive_glob(treeroot, pattern):
