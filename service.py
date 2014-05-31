@@ -158,7 +158,8 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
                 desc = " / ".join(desc)
                 if desc == "":
                     desc = __language__(32009)
-            desc = desc.decode('latin1')
+            try: desc = desc.decode('latin1')
+            else: pass
             desc = re.sub('<br />',' ',desc)
             desc = re.sub('<br>',' ',desc)
             desc = re.sub('\n',' ',desc)
