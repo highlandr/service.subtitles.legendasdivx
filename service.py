@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Service LegendasDivx.com version 0.0.5
+# Service LegendasDivx.com version 0.0.6
 # Code based on Undertext (FRODO) service
 # Coded by HiGhLaNdR@OLDSCHOOL
 # Ported to Gotham by HiGhLaNdR@OLDSCHOOL
@@ -162,7 +162,8 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
                     desc = re.findall(release_pattern1, desc_ori, re.IGNORECASE | re.VERBOSE | re.DOTALL | re.UNICODE | re.MULTILINE)
                     desc = " / ".join(desc)
                     if desc == "":
-                        desc = __language__(32009).encode('utf8').decode('utf8')
+                        #desc = __language__(32009).encode('utf8').decode('utf8')
+                        desc = desc_ori.decode('latin1')
                     else:
                         desc = desc.decode('latin1')
             else:
