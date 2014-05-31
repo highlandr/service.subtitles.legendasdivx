@@ -93,6 +93,8 @@ Release: The.Dark.Knight.2008.720p.BluRay.DTS.x264-ESiR</td>
 
 subtitle_pattern = "<div\sclass=\"sub_box\">[\r\n\t]{2}<div\sclass=\"sub_header\">[\r\n\t]{2}<b>(.+?)</b>\s\((\d\d\d\d)\)\s.+?[\r\n\t ]+?[\r\n\t]</div>[\r\n\t]{2}<table\sclass=\"sub_main\scolor1\"\scellspacing=\"0\">[\r\n\t]{2}<tr>[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}<th>CDs:</th>[\r\n\t ]{2}<td>(.+?)</td>[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}<a\shref=\"\?name=Downloads&d_op=ratedownload&lid=(.+?)\">[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}.+?[\r\n\t]{2}<th\sclass=\"color2\">Hits:</th>[\r\n\t]{2}<td>(.+?)</td>[\r\n\t ]{2}.+?[\r\n\t]{2}<td>(.+?)</td>[\r\n\t ]{2}.+?[\r\n\t ]{2}.+?[\r\n\t ]{2}.+?[\r\n\t ]{2}.+?.{2,5}[\r\n\t ]{2}.+?[\r\n\t ]{2}<td\scolspan=\"5\"\sclass=\"td_desc\sbrd_up\">((\n|.)*)</td>"
 release_pattern = "([^\W]\w{1,}\.{1,1}[^\.|^\ ][\w{1,}\.|\-|\(\d\d\d\d\)|\[\d\d\d\d\]]{3,}[\w{3,}\-|\.{1,1}]\w{2,})"
+release_pattern1 = "([^\W][\w\ ]{4,}[^\Ws][x264|xvid]{1,}-[\w]{1,})"
+#release_pattern = "([^\W][\w\ |\.|\-]{4,}[^\Ws][x264|xvid]{1,}-[\w]{1,})"
 # group(1) = Name, group(2) = Year, group(3) = Number Files, group(4) = ID, group(5) = Hits, group(6) = Requests, group(7) = Description
 #==========
 # Functions
@@ -149,16 +151,22 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             if (downloads > 5):
                 downloads=5
             filename = string.strip(matches.group(1))
-            desc = string.strip(matches.group(7))
+            desc_ori = string.strip(matches.group(7))
             #log(u"_desc_dirty '%s' ..." % desc)
             #Remove new lines on the commentaries
             filename = re.sub('\n',' ',filename)
             if __descon__ == "false":
-                desc = re.findall(release_pattern, desc, re.IGNORECASE | re.VERBOSE | re.DOTALL | re.UNICODE | re.MULTILINE)
+                desc = re.findall(release_pattern, desc_ori, re.IGNORECASE | re.VERBOSE | re.DOTALL | re.UNICODE | re.MULTILINE)
                 desc = " / ".join(desc)
                 if desc == "":
-                    desc = __language__(32009)
-            desc = desc.decode('latin1')
+                    desc = re.findall(release_pattern1, desc_ori, re.IGNORECASE | re.VERBOSE | re.DOTALL | re.UNICODE | re.MULTILINE)
+                    desc = " / ".join(desc)
+                    if desc == "":
+                        desc = __language__(32009).encode('utf8').decode('utf8')
+                    else:
+                        desc = desc.decode('latin1')
+            else:
+                desc = desc_ori.decode('latin1')
             desc = re.sub('<br />',' ',desc)
             desc = re.sub('<br>',' ',desc)
             desc = re.sub('\n',' ',desc)
@@ -348,7 +356,7 @@ def Search(item):
                     title = os.path.split(file_original_path)
                     searchstring = title[-1]
             else:
-                if title == "":
+                if title == '':
                     title = os.path.split(file_original_path)
                     searchstring = title[-1]
                     #log(u"TITLE NULL Searchstring string = %s" % (searchstring,))
