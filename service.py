@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Service LegendasDivx.com version 0.0.7
+# Service LegendasDivx.com version 0.0.8
 # Code based on Undertext (FRODO) service
 # Coded by HiGhLaNdR@OLDSCHOOL
 # Ported to Gotham by HiGhLaNdR@OLDSCHOOL
@@ -163,11 +163,11 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
                     desc = " / ".join(desc)
                     if desc == "":
                         #desc = __language__(32009).encode('utf8').decode('utf8')
-                        desc = desc_ori.decode('latin1')
+                        desc = desc_ori.decode('utf8', 'ignore')
                     else:
-                        desc = desc.decode('latin1')
+                        desc = desc.decode('utf8', 'ignore')
             else:
-                desc = desc_ori.decode('latin1')
+                desc = desc_ori.decode('utf8', 'ignore')
             desc = re.sub('<br />',' ',desc)
             desc = re.sub('<br>',' ',desc)
             desc = re.sub('\n',' ',desc)
@@ -208,7 +208,7 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             if __parentfolder__ == '2':
                 if (searchstring_notclean != ""):
                     sync = False
-                    if string.lower(searchstring_notclean) in string.lower(desc):
+                    if string.lower(searchstring_notclean) in string.lower(desc.decode('utf8', 'ignore')):
                         sync = True
                 else:
                     if (string.lower(dirsearch_check[-1]) == "rar") or (string.lower(dirsearch_check[-1]) == "cd1") or (string.lower(dirsearch_check[-1]) == "cd2"):
@@ -466,7 +466,7 @@ def Download(id, filename):
                 # determine if there is a newer file created in __temp__ (marks that the extraction had completed)
                 for file in files:
                     if file.split('.')[-1] in SUB_EXTS:
-                        mtime = os.stat(pjoin(__temp__, file.decode("utf-8"))).st_mtime
+                        mtime = os.stat(pjoin(__temp__, file.encode("utf-8").decode("utf-8"))).st_mtime
                         if mtime > max_mtime:
                             max_mtime =  mtime
                 waittime  = waittime + 1
