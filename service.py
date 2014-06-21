@@ -145,18 +145,22 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             if (downloads > 5): downloads=5
             filename = string.strip(matches.group(1))
             desc_ori = string.strip(matches.group(7))
+            desc_ori = re.sub('www.legendasdivx.com','',desc_ori)
             log(u"_desc_dirty '%s' ..." % desc_ori.decode('utf8', 'ignore'))
             #Remove new lines on the commentaries
             filename = re.sub('\n',' ',filename)
+            __filenameon__ = "true"
             if __descon__ == "false":
                 desc = re.findall(release_pattern, desc_ori, re.IGNORECASE | re.VERBOSE | re.DOTALL | re.UNICODE | re.MULTILINE)
                 desc = " / ".join(desc)
+                if desc != "": __filenameon__ = "false"
                 if desc == "":
                     desc = re.findall(release_pattern1, desc_ori, re.IGNORECASE | re.VERBOSE | re.DOTALL | re.UNICODE | re.MULTILINE)
                     desc = " / ".join(desc)
-                    if desc == "": desc = desc_ori.decode('utf8', 'ignore')
-                    else: desc = desc.decode('utf8', 'ignore')
-            else: desc = desc_ori.decode('utf8', 'ignore')
+                    if desc != "": __filenameon__ = "false"
+                    if desc == "": desc = desc_ori.decode('utf8', 'ignore'); __filenameon__ = "true"
+                    else: desc = desc.decode('utf8', 'ignore'); __filenameon__ = "false"
+            else: desc = desc_ori.decode('utf8', 'ignore'); __filenameon__ = "true"
             desc = re.sub('<br />',' ',desc)
             desc = re.sub('<br>',' ',desc)
             desc = re.sub('\n',' ',desc)
@@ -199,8 +203,8 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
                             if re.search(filesearch[1][:len(filesearch[1])-4], desc) or re.search(dirsearch[-1], desc, re.IGNORECASE): sync = True
                         else:
                             if re.search(filesearch[1][:len(filesearch[1])-4], desc, re.IGNORECASE): sync = True
-            if __descon__ == "false": filename = desc + "  " + "hits: " + hits
-            else: filename = filename + " " + "(" + movieyear + ")" + "  " + "hits: " + hits + " - " + desc
+            #if __descon__ == "false": filename = desc + "  " + "hits: " + hits
+            #else: filename = filename + " " + "(" + movieyear + ")" + "  " + "hits: " + hits + " - " + desc
             subtitles_list.append({'rating': str(downloads), 'no_files': no_files, 'filename': filename, 'desc': desc, 'sync': sync, 'hits' : hits, 'id': id, 'language_short': languageshort, 'language_name': languagelong})
         page = page + 1
         
