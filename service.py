@@ -125,8 +125,8 @@ def geturl(url):
 
 def getallsubs(searchstring, languageshort, languagelong, file_original_path, searchstring_notclean):
     subtitles_list = []
-    log(u"_searchstring '%s' ..." % searchstring)
-    log(u"_searchstring_notclean '%s' ..." % searchstring_notclean)
+    log(u"getallsubs: Search String = '%s'" % searchstring)
+    log(u"getallsubs: Search String Not Clean = '%s'" % searchstring_notclean)
     page = 1
     if languageshort == "pt": url = main_url + "modules.php?name=Downloads&file=jz&d_op=search_next&order=&form_cat=28&page=" + str(page) + "&query=" + urllib.quote_plus(searchstring)
     elif languageshort == "pb": url = main_url + "modules.php?name=Downloads&file=jz&d_op=search_next&order=&form_cat=29&page=" + str(page) + "&query=" + urllib.quote_plus(searchstring)
@@ -134,7 +134,7 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
     elif languageshort == "en": url = main_url + "modules.php?name=Downloads&file=jz&d_op=search_next&order=&form_cat=31&page=" + str(page) + "&query=" + urllib.quote_plus(searchstring)
     else: url = main_url + "index.php"
     content = geturl(url)
-    log(u"Getting '%s' subs ..." % languageshort)
+    log(u"getallsubs: LanguageShort = '%s'" % languageshort)
     while re.search(subtitle_pattern, content, re.IGNORECASE | re.DOTALL | re.MULTILINE | re.UNICODE | re.VERBOSE) and page < 6:
         for matches in re.finditer(subtitle_pattern, content, re.IGNORECASE | re.DOTALL | re.MULTILINE | re.UNICODE | re.VERBOSE):
             hits = matches.group(5)
@@ -146,7 +146,7 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             filename = string.strip(matches.group(1))
             desc_ori = string.strip(matches.group(7))
             desc_ori = re.sub('www.legendasdivx.com','',desc_ori)
-            log(u"_desc_dirty '%s' ..." % desc_ori.decode('utf8', 'ignore'))
+            log(u"getallsubs: Original Decription = '%s'" % desc_ori.decode('utf8', 'ignore'))
             #Remove new lines on the commentaries
             filename = re.sub('\n',' ',filename)
             __filenameon__ = "true"
@@ -168,16 +168,16 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             #Remove HTML tags on the commentaries
             filename = re.sub(r'<[^<]+?>','', filename)
             desc = re.sub(r'<[^<]+?>|[~]','', desc)
-            log(u"_desc '%s' ..." % desc.decode('utf8', 'ignore'))
+            log(u"getallsubs: Final Description = '%s'" % desc.decode('utf8', 'ignore'))
             #Find filename on the comentaries to show sync label using filename or dirname (making it global for further usage)
             global filesearch
             filesearch = os.path.abspath(file_original_path)
-            log(u"filesearch1: '%s'" % filesearch)
+            log(u"getallsubs: Filesearch String = '%s'" % filesearch)
             filesearch = os.path.split(filesearch)
             dirsearch = filesearch[0].split(os.sep)
-            log(u"dirsearch: '%s'" % dirsearch)
+            log(u"getallsubs: dirsearch = '%s'" % dirsearch)
             dirsearch_check = string.split(dirsearch[-1], '.')
-            log(u"dirsearch_check: '%s'" % dirsearch_check)
+            log(u"getallsubs: dirsearch_check = '%s'" % dirsearch_check)
             #### PARENT FOLDER TWEAK DEFINED IN THE ADD-ON SETTINGS (AUTO | ALWAYS ON (DEACTIVATED) | OFF)
             __parentfolder__ = __addon__.getSetting( 'PARENT' )
             if __parentfolder__ == '0':
@@ -262,17 +262,17 @@ def Search(item):
     if __parentfolder__ == '0':
         filename = os.path.abspath(file_original_path)
         dirsearch = filename.split(os.sep)
-        log(u"dirsearch_search string = %s" % (dirsearch,))
+        log(u"getallsubs: dirsearch string __parentfolder__ is 0 = %s" % (dirsearch,))
         if re.search(release_pattern, dirsearch[-2], re.IGNORECASE): __parentfolder__ = '1'
         else: __parentfolder__ = '2'
     if __parentfolder__ == '1':
         filename = os.path.abspath(file_original_path)
         dirsearch = filename.split(os.sep)
         filename = dirsearch[-2]
-        log(u"__parentfolder1__ = %s" % (filename,))
+        log(u"getallsubs: filename string __parentfolder__ is 1 = %s" % (filename,))
     if __parentfolder__ == '2':   
         filename = os.path.splitext(os.path.basename(file_original_path))[0]
-        log(u"__parentfolder2__ = %s" % (filename,))
+        log(u"getallsubs: filename string __parentfolder__ is 2 = %s" % (filename,))
  
     filename = xbmc.getCleanMovieTitle(filename)[0]
     searchstring_notclean = os.path.splitext(os.path.basename(file_original_path))[0]
@@ -289,8 +289,8 @@ def Search(item):
     tvshow = item['tvshow']
     season = item['season']
     episode = item['episode']
-    log(u"Tvshow string = %s" % (tvshow,))
-    log(u"Title string = %s" % (title,))
+    log(u"Search: Tvshow string = %s" % (tvshow,))
+    log(u"Search: Title string = %s" % (title,))
     subtitles_list = []
     
     if item['mansearch']:
@@ -314,11 +314,11 @@ def Search(item):
                         searchstring_notclean = dirsearch[-3]
                         searchstring = xbmc.getCleanMovieTitle(dirsearch[-3])
                         searchstring = searchstring[0]
-                        log(u"RAR MULTI1 CD Searchstring string = %s" % (searchstring,))
+                        log(u"Search: RAR MULTI CD String = %s" % (searchstring,))
                     else: searchstring = title
                 else:
                     searchstring = title
-                    log(u"RAR NO CD Searchstring string = %s" % (searchstring,))
+                    log(u"Search: RAR NO MULTI CD String = %s" % (searchstring,))
             elif 'cd1' in string.lower(title) or 'cd2' in string.lower(title) or 'cd3' in string.lower(title):
                 dirsearch = os.path.abspath(file_original_path)
                 dirsearch = os.path.split(dirsearch)
@@ -327,7 +327,7 @@ def Search(item):
                     searchstring_notclean = dirsearch[-2]
                     searchstring = xbmc.getCleanMovieTitle(dirsearch[-2])
                     searchstring = searchstring[0]
-                    log(u"MULTI1 CD Searchstring string = %s" % (searchstring,))
+                    log(u"Search: MULTI CD String = %s" % (searchstring,))
                 else:
                     #We are at the root of the drive!!! so there's no dir to lookup only file#
                     title = os.path.split(file_original_path)
@@ -336,24 +336,24 @@ def Search(item):
                 if title == '':
                     title = os.path.split(file_original_path)
                     searchstring = title[-1]
-                    log(u"TITLE NULL Searchstring string = %s" % (searchstring,))
+                    log(u"Search: TITLE is NULL using filename as String = %s" % (searchstring,))
                 else:
                     if __search__ == '0':
                         if re.search("(.+?s[0-9][0-9]e[0-9][0-9])", filename, re.IGNORECASE):
                             searchstring = re.search("(.+?s[0-9][0-9]e[0-9][0-9])", filename, re.IGNORECASE)
                             searchstring = searchstring.group(0)
-                            log(u"FilenameTV Searchstring = %s" % (searchstring,))
+                            log(u"Search: Filename is TV String (search is 0) = %s" % (searchstring,))
                         else:
                             searchstring = filename
-                            log(u"Filename Searchstring = %s" % (searchstring,))
+                            log(u"Search: Filename is Not TV String (search is 0) = %s" % (searchstring,))
                     else:
                         if re.search("(.+?s[0-9][0-9]e[0-9][0-9])", title, re.IGNORECASE):
                             searchstring = re.search("(.+?s[0-9][0-9]e[0-9][0-9])", title, re.IGNORECASE)
                             searchstring = searchstring.group(0)
-                            log(u"TitleTV Searchstring = %s" % (searchstring,))
+                            log(u"Search: Title is TV String (search is 1) = %s" % (searchstring,))
                         else:
                             searchstring = title
-                            log(u"Title Searchstring = %s" % (searchstring,))
+                            log(u"Search: Title is Not TV String (search is 1) = %s" % (searchstring,))
 
     PT_ON = __addon__.getSetting( 'PT' )
     PTBR_ON = __addon__.getSetting( 'PTBR' )
