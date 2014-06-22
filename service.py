@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Service LegendasDivx.com version 0.1.2
+# Service LegendasDivx.com version 0.1.3
 # Code based on Undertext (FRODO) service
 # Coded by HiGhLaNdR@OLDSCHOOL
 # Ported to Gotham by HiGhLaNdR@OLDSCHOOL
@@ -285,6 +285,7 @@ def Search(item):
     israr = string.lower(israr[-1])
 
     title = xbmc.getCleanMovieTitle(item['title'])[0]
+    year = item['year']
     tvshow = item['tvshow']
     season = item['season']
     episode = item['episode']
@@ -294,13 +295,17 @@ def Search(item):
     
     if item['mansearch']:
         searchstring = item['mansearchstr']
-        log(u"Manual Searchstring string = %s" % (searchstring,))
+        log(u"Search: Manual String = %s" % (searchstring,))
     else:
-        if tvshow != '': searchstring = "%s S%#02dE%#02d" % (tvshow, int(season), int(episode))
-        elif title != '' and tvshow != '': searchstring = title
+        if tvshow != '':
+            searchstring = "%s S%#02dE%#02d" % (tvshow, int(season), int(episode))
+            log(u"Search: Title TV LIBRARY String = %s" % (searchstring,))
+        elif title != '' and tvshow == '':
+            searchstring = title + ' ' + year
+            log(u"Search: Title MOVIE LIBRARY String = %s" % (searchstring,))
         else:
             if 'rar' in israr and searchstring is not None:
-                log(u"RAR Searchstring string = %s" % (searchstring,))
+                log(u"Search: RAR Filename String = %s" % (searchstring,))
                 if 'cd1' in string.lower(title) or 'cd2' in string.lower(title) or 'cd3' in string.lower(title):
                     dirsearch = os.path.abspath(file_original_path)
                     dirsearch = os.path.split(dirsearch)
@@ -334,21 +339,21 @@ def Search(item):
                     log(u"TITLE NULL Searchstring string = %s" % (searchstring,))
                 else:
                     if __search__ == '0':
-						if re.search("(.+?s[0-9][0-9]e[0-9][0-9])", filename, re.IGNORECASE):
-							searchstring = re.search("(.+?s[0-9][0-9]e[0-9][0-9])", filename, re.IGNORECASE)
-							searchstring = searchstring.group(0)
-							log(u"FilenameTV Searchstring = %s" % (searchstring,))
-						else:
-							searchstring = filename
-							log(u"Filename Searchstring = %s" % (searchstring,))
+                        if re.search("(.+?s[0-9][0-9]e[0-9][0-9])", filename, re.IGNORECASE):
+                            searchstring = re.search("(.+?s[0-9][0-9]e[0-9][0-9])", filename, re.IGNORECASE)
+                            searchstring = searchstring.group(0)
+                            log(u"FilenameTV Searchstring = %s" % (searchstring,))
+                        else:
+                            searchstring = filename
+                            log(u"Filename Searchstring = %s" % (searchstring,))
                     else:
-						if re.search("(.+?s[0-9][0-9]e[0-9][0-9])", title, re.IGNORECASE):
-							searchstring = re.search("(.+?s[0-9][0-9]e[0-9][0-9])", title, re.IGNORECASE)
-							searchstring = searchstring.group(0)
-							log(u"TitleTV Searchstring = %s" % (searchstring,))
-						else:
-							searchstring = title
-							log(u"Title Searchstring = %s" % (searchstring,))
+                        if re.search("(.+?s[0-9][0-9]e[0-9][0-9])", title, re.IGNORECASE):
+                            searchstring = re.search("(.+?s[0-9][0-9]e[0-9][0-9])", title, re.IGNORECASE)
+                            searchstring = searchstring.group(0)
+                            log(u"TitleTV Searchstring = %s" % (searchstring,))
+                        else:
+                            searchstring = title
+                            log(u"Title Searchstring = %s" % (searchstring,))
 
     PT_ON = __addon__.getSetting( 'PT' )
     PTBR_ON = __addon__.getSetting( 'PTBR' )

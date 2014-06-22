@@ -1,3 +1,6 @@
+0.1.3
+- Bug when the movie is in the movie library and was using filename instead.
+- Added year for better searching when the movie is in the library. (Example: Sin City)
 0.1.2
 - Release pattern tweak for releases with a "slash" in-between words.
 - Added Debug Mode in configurations for better help to failures (Mafarricos)
