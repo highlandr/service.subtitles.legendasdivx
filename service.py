@@ -203,8 +203,8 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
                             if re.search(filesearch[1][:len(filesearch[1])-4], desc) or re.search(dirsearch[-1], desc, re.IGNORECASE): sync = True
                         else:
                             if re.search(filesearch[1][:len(filesearch[1])-4], desc, re.IGNORECASE): sync = True
-            #if __descon__ == "false": filename = desc + "  " + "hits: " + hits
-            #else: filename = filename + " " + "(" + movieyear + ")" + "  " + "hits: " + hits + " - " + desc
+            if __filenameon__ == "false": filename = desc + "  " + "hits: " + hits
+            else: filename = filename + " " + "(" + movieyear + ")" + "  " + "hits: " + hits + " - " + desc
             subtitles_list.append({'rating': str(downloads), 'no_files': no_files, 'filename': filename, 'desc': desc, 'sync': sync, 'hits' : hits, 'id': id, 'language_short': languageshort, 'language_name': languagelong})
         page = page + 1
         
