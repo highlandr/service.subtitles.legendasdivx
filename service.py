@@ -405,11 +405,11 @@ def Download(id, filename):
     login_postdata = urllib.urlencode({'username' : username, 'user_password' : password, 'op' : 'login'})
     cj = cookielib.CookieJar()
     my_opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    my_opener.addheaders = [('Referer', 'http://www.legendasdivx.com/modules.php?name=Your_Account')]
+    my_opener.addheaders = [('Referer', main_url + 'modules.php?name=Your_Account')]
     urllib2.install_opener(my_opener)
-    request = urllib2.Request('http://www.legendasdivx.com/modules.php?name=Your_Account', login_postdata)
+    request = urllib2.Request(main_url + 'modules.php?name=Your_Account', login_postdata)
     response = urllib2.urlopen(request).read()
-    content = my_opener.open('http://www.legendasdivx.com/modules.php?name=Downloads&d_op=getit&lid=' + id + '&username=' + username)
+    content = my_opener.open(main_url + 'modules.php?name=Downloads&d_op=getit&lid=' + id + '&username=' + username)
     content = content.read()
     #### If user is not registered or User\Pass is misspelled it will generate an error message and break the script execution!
     if 'Apenas Disponvel para utilizadores registados.' in content.decode('utf8', 'ignore'):
