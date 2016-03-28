@@ -25,7 +25,6 @@ import xbmcplugin
 import xbmcvfs
 import cookielib
 import urllib2
-import uuid
 import socket
 
 __addon__ = xbmcaddon.Addon()
@@ -418,10 +417,10 @@ def Download(id, filename):
     if content is not None:
         header = content[:4]
         if header == 'Rar!':
-            local_tmp_file = pjoin(__temp__, str(uuid.uuid4())+".rar")
+            local_tmp_file = pjoin(__temp__, "ldivx.rar")
             packed = True
         elif header == 'PK':
-            local_tmp_file = pjoin(__temp__, str(uuid.uuid4())+".zip")
+            local_tmp_file = pjoin(__temp__, "ldivx.zip")
             packed = True
         else:
             # never found/downloaded an unpacked subtitles file, but just to be sure ...
@@ -436,7 +435,7 @@ def Download(id, filename):
             local_file_handle.close()
         except: log(u"Failed to save subtitles to '%s'" % (local_tmp_file,))
         if packed:
-            xbmc.executebuiltin("XBMC.Extract(%s, %s)" % (local_tmp_file.encode("utf-8"), __temp__))
+            xbmc.executebuiltin(('XBMC.Extract("%s", "%s")' % (local_tmp_file, __temp__)).encode('utf-8'), True)
             xbmc.sleep(1000)
 
             ## IF EXTRACTION FAILS, WHICH HAPPENS SOMETIMES ... BUG?? ... WE WILL BROWSE THE RAR FILE FOR MANUAL EXTRACTION ##
