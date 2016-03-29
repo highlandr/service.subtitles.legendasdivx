@@ -25,6 +25,7 @@ import xbmcplugin
 import xbmcvfs
 import cookielib
 import urllib2
+import uuid
 import socket
 
 __addon__ = xbmcaddon.Addon()
@@ -418,10 +419,10 @@ def Download(id, filename):
     if content is not None:
         header = content[:4]
         if header == 'Rar!':
-            local_tmp_file = pjoin(__temp__, "ldivx.rar")
+            local_tmp_file = pjoin(__temp__, str(uuid.uuid4())+".rar")
             packed = True
         elif header == 'PK':
-            local_tmp_file = pjoin(__temp__, "ldivx.zip")
+            local_tmp_file = pjoin(__temp__, str(uuid.uuid4())+".zip")
             packed = True
         else:
             # never found/downloaded an unpacked subtitles file, but just to be sure ...
