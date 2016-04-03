@@ -406,7 +406,7 @@ def Download(id, filename):
     unpacked = str(uuid.uuid4())
     unpacked = unpacked.replace("-","")
     unpacked = unpacked[0:6]
-    xbmcvfs.mkdirs(__temp__ + "\\" + unpacked)
+    xbmcvfs.mkdirs(__temp__ + "/" + unpacked)
     __newtemp__ = xbmc.translatePath(os.path.join(__temp__, unpacked))
 
     subtitles_list = []
@@ -484,7 +484,7 @@ def Download(id, filename):
                         if dircount == 0:
                             filelist = os.listdir(__newtemp__)
                             for subfile in filelist:
-                                shutil.move(os.path.join(__newtemp__, subfile), __temp__+'\\')
+                                shutil.move(os.path.join(__newtemp__, subfile), __temp__+'/')
                             os.rmdir(__newtemp__)
                             dialog = xbmcgui.Dialog()
                             subs_file = dialog.browse(1, __language__(32024).encode('utf8'), 'files', '.srt|.sub|.aas|.ssa|.smi|.txt', False, False, __temp__+'/').decode("utf-8")
@@ -492,7 +492,7 @@ def Download(id, filename):
                             break
                         else:
                             for dir in dirs:
-                                shutil.move(os.path.join(__newtemp__, dir), __temp__+'\\')
+                                shutil.move(os.path.join(__newtemp__, dir), __temp__+'/')
                             os.rmdir(__newtemp__)
                             dialog = xbmcgui.Dialog()
                             subs_file = dialog.browse(1, __language__(32024).encode('utf8'), 'files', '.srt|.sub|.aas|.ssa|.smi|.txt', False, False, __temp__+'/').decode("utf-8")
