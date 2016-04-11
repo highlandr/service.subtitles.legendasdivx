@@ -407,7 +407,7 @@ def Download(id, filename):
     unpacked = unpacked.replace("-","")
     unpacked = unpacked[0:6]
     xbmcvfs.mkdirs(__temp__ + "/" + unpacked)
-    __newtemp__ = xbmc.translatePath(os.path.join(__temp__, unpacked))
+    __newtemp__ = xbmc.translatePath(os.path.join(__temp__, unpacked)).decode("utf-8")
 
     subtitles_list = []
     username = __addon__.getSetting( 'LDuser' )
