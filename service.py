@@ -113,7 +113,7 @@ def _log(module, msg):
     xbmc.log(s.encode('utf-8'), level=xbmc.LOGDEBUG)
 
 def log(msg):
-    if debug == 'true': _log(_name, msg)
+    if debug == 'true': _log(_scriptname, msg)
 
 def urlpost(query, lang, page):
     postdata = urllib.urlencode({'query' : query, 'form_cat' : lang})
