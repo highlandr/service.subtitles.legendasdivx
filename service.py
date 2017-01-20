@@ -535,6 +535,10 @@ if params['action'] == 'search' or params['action'] == 'manualsearch':
     item['mansearch'] = False
     item['languages'] = []
 
+    if not item['title']:
+        log("VideoPlayer.OriginalTitle is not available, using VideoPlayer.Title instead.")
+        item['title'] = normalizeString(xbmc.getInfoLabel("VideoPlayer.Title"))
+
     if 'searchstring' in params:
         item['mansearch'] = True
         item['mansearchstr'] = urllib.unquote(params['searchstring']).decode('utf-8')
