@@ -160,7 +160,6 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             filename = str.strip(matches.group(1))
             desc_ori = str.strip(matches.group(8))
             desc_ori = re.sub('www.legendasdivx.com','',desc_ori)
-#            log(u"getallsubs: Original Decription = '%s'" % desc_ori.decode('utf8', 'ignore'))
             log(u"getallsubs: Original Decription = '%s'" % desc_ori)
             #Remove new lines on the commentaries
             filename = re.sub('\n',' ',filename)
@@ -181,10 +180,8 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             desc = re.sub('\n',' ',desc)
             desc = re.sub(':.','',desc)
             #Remove HTML tags on the commentaries
-#            filename = re.sub('\n',' ',filename.decode('utf8', 'ignore'))
             filename = re.sub('\n',' ',filename)
             desc = re.sub(r'<[^<]+?>|[~]','', desc)
-#            log(u"getallsubs: Final Description = '%s'" % desc.decode('utf8', 'ignore'))
             log(u"getallsubs: Final Description = '%s'" % desc)
             #Find filename on the comentaries to show sync label using filename or dirname (making it global for further usage)
             global filesearch
@@ -398,18 +395,6 @@ def recursive_glob(treeroot, pattern):
             for filename in fnmatch.filter(files, '*.' + extension): results.append(os.path.join(base, filename))
     return results
 
-#def xbmc_walk(DIR):
-#    LIST = []
-#    dirs, files = xbmcvfs.listdir(DIR)
-#    for file in files:
-#        ext = os.path.splitext(file)[1][1:].lower()
-#        if ext in SUB_EXTS:
-#            LIST.append(os.path.join(DIR, quote_plus(file)))
-#    for dir in dirs:
-#        LIST.extend(list(xbmc_walk(os.path.join(DIR, quote_plus(dir)))))
-#        #xbmcvfs.mkdirs(dir)
-#    return LIST
-
 def xbmc_extract(SRC, DEST):
     dd_ext, ff_ext = xbmcvfs.listdir(SRC)
     for ff in ff_ext:
@@ -439,36 +424,6 @@ def xbmc_extract(SRC, DEST):
         else:
             log("Extracting (back into the ff loop: '%s' to '%s'" % (now_SRC,now_DEST))
 
-##### CODE BY ZACH ###########################
-#def extract_all(archive_file,directory_to):
-#	overall_success = True
-#	files_out = list()
-#	if 'rar://' in archive_file:
-#		archive_path = archive_file
-#	else:
-#		archive_path = 'rar://%(archive_file)s' % {'archive_file': quote_plus(xbmc.translatePath(archive_file))}
-#	dirs_in_archive, files_in_archive = xbmcvfs.listdir(archive_path)
-#	for ff in files_in_archive:
-#		file_from = os.path.join(archive_path,ff).replace('\\','/') #Windows unexpectedly requires a forward slash in the path
-#		success = xbmcvfs.copy(file_from,os.path.join(xbmc.translatePath(directory_to),ff)) #Attempt to move the file first
-#		if not success:
-#			xbmc.log(msg='Error extracting file %(ff)s from archive %(archive_file)s' % {'ff': ff,'archive_file':archive_file}, level=xbmc.LOGDEBUG)
-#			overall_success = False
-#		else:
-#			xbmc.log(msg='Extracted file %(ff)s from archive %(archive_file)s' % {'ff': ff,'archive_file':archive_file}, level=xbmc.LOGDEBUG)
-#			files_out.append(os.path.join(xbmc.translatePath(directory_to),ff))
-#	for dd in dirs_in_archive:
-#		if xbmcvfs.mkdir(os.path.join(xbmc.translatePath(directory_to),dd)):
-#			xbmc.log(msg='Created folder %(dd)s for archive %(archive_file)s' % {'dd': os.path.join(xbmc.translatePath(directory_to),dd,''),'archive_file':archive_file}, level=xbmc.LOGDEBUG)
-#			files_out2, success2 = extract_all(os.path.join(archive_path,dd,'').replace('\\','/'),os.path.join(directory_to,dd))
-#			if success2:
-#				files_out = files_out + files_out2
-#			else:
-#				overall_success = False
-#		else:
-#			overall_success = False
-#			xbmc.log(msg='Unable to create the folder %(dir_from)s for libarchive extraction' % {'dir_from': os.path.join(xbmc.translatePath(directory_to),dd)}, level=xbmc.LOGDEBUG)
-#	return files_out, overall_success
 
 def Download(id, filename):
     """Called when subtitle download request from XBMC."""
