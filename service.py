@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Service LegendasDivx.com version 1.0.3
+# Service LegendasDivx.com version 1.0.4
 # Code based on Undertext (FRODO) service
 # Coded by HiGhLaNdR@OLDSCHOOL
 # Ported to Gotham by HiGhLaNdR@OLDSCHOOL
@@ -23,8 +23,6 @@ import xbmcaddon
 import xbmcgui
 import xbmcplugin
 import xbmcvfs
-#import cookielib
-#import urllib2
 import http.cookiejar
 import uuid
 import socket
@@ -58,7 +56,7 @@ debug_pretext = "LegendasDivx"
 
 INTERNAL_LINK_URL = "plugin://%(scriptid)s/?action=download&id=%(id)s&filename=%(filename)s"
 SUB_EXTS = ['srt', 'sub', 'txt', 'ass', 'ssa', 'smi']
-HTTP_USER_AGENT = "User-Agent=Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3 ( .NET CLR 3.5.30729)"
+HTTP_USER_AGENT = "User-Agent=Kodi 19 Matrix"
 
 #====================================================================================================================
 # Regular expression patterns
@@ -400,16 +398,77 @@ def recursive_glob(treeroot, pattern):
             for filename in fnmatch.filter(files, '*.' + extension): results.append(os.path.join(base, filename))
     return results
 
-def xbmc_walk(DIR):
-    LIST = []
-    dirs, files = xbmcvfs.listdir(DIR)
-    for file in files:
-        ext = os.path.splitext(file)[1][1:].lower()
+#def xbmc_walk(DIR):
+#    LIST = []
+#    dirs, files = xbmcvfs.listdir(DIR)
+#    for file in files:
+#        ext = os.path.splitext(file)[1][1:].lower()
+#        if ext in SUB_EXTS:
+#            LIST.append(os.path.join(DIR, quote_plus(file)))
+#    for dir in dirs:
+#        LIST.extend(list(xbmc_walk(os.path.join(DIR, quote_plus(dir)))))
+#        #xbmcvfs.mkdirs(dir)
+#    return LIST
+
+def xbmc_extract(SRC, DEST):
+    dd_ext, ff_ext = xbmcvfs.listdir(SRC)
+    for ff in ff_ext:
+        ext = os.path.splitext(ff)[1][1:].lower()
         if ext in SUB_EXTS:
-            LIST.append(os.path.join(DIR,  file))
-    for dir in dirs:
-        LIST.extend(list(xbmc_walk(os.path.join(DIR, dir))))
-    return LIST
+            src_file = pjoin(SRC,ff).replace('\\','/')
+            dst_file = pjoin(xbmc.translatePath(DEST),ff)
+            success = xbmcvfs.copy(src_file,dst_file)
+            if not success:
+                log("Error extracting: '%s' to '%s'" % (src_file,dst_file))
+            else:
+                log("Extracting: '%s' to '%s'" % (src_file,dst_file))
+        else:
+            log("NO FILES YET...")
+    for dd in dd_ext:
+        dd_mk = pjoin(DEST,dd).replace('\\','/')
+        success_mk = xbmcvfs.mkdir(dd_mk)
+        if not success_mk:
+            log("Error creating directory: '%s'" % dd_mk)
+        else:
+            log("Created directory: '%s'" % dd_mk)
+        now_SRC = pjoin(SRC,dd,'').replace('\\','/')
+        now_DEST = pjoin(DEST,dd)
+        success_dd = xbmc_extract(now_SRC,now_DEST)
+        if not success_dd:
+            log("Error extracting inside dir: '%s' to '%s'" % (now_SRC,now_DEST))
+        else:
+            log("Extracting (back into the ff loop: '%s' to '%s'" % (now_SRC,now_DEST))
+
+##### CODE BY ZACH ###########################
+#def extract_all(archive_file,directory_to):
+#	overall_success = True
+#	files_out = list()
+#	if 'rar://' in archive_file:
+#		archive_path = archive_file
+#	else:
+#		archive_path = 'rar://%(archive_file)s' % {'archive_file': quote_plus(xbmc.translatePath(archive_file))}
+#	dirs_in_archive, files_in_archive = xbmcvfs.listdir(archive_path)
+#	for ff in files_in_archive:
+#		file_from = os.path.join(archive_path,ff).replace('\\','/') #Windows unexpectedly requires a forward slash in the path
+#		success = xbmcvfs.copy(file_from,os.path.join(xbmc.translatePath(directory_to),ff)) #Attempt to move the file first
+#		if not success:
+#			xbmc.log(msg='Error extracting file %(ff)s from archive %(archive_file)s' % {'ff': ff,'archive_file':archive_file}, level=xbmc.LOGDEBUG)
+#			overall_success = False
+#		else:
+#			xbmc.log(msg='Extracted file %(ff)s from archive %(archive_file)s' % {'ff': ff,'archive_file':archive_file}, level=xbmc.LOGDEBUG)
+#			files_out.append(os.path.join(xbmc.translatePath(directory_to),ff))
+#	for dd in dirs_in_archive:
+#		if xbmcvfs.mkdir(os.path.join(xbmc.translatePath(directory_to),dd)):
+#			xbmc.log(msg='Created folder %(dd)s for archive %(archive_file)s' % {'dd': os.path.join(xbmc.translatePath(directory_to),dd,''),'archive_file':archive_file}, level=xbmc.LOGDEBUG)
+#			files_out2, success2 = extract_all(os.path.join(archive_path,dd,'').replace('\\','/'),os.path.join(directory_to,dd))
+#			if success2:
+#				files_out = files_out + files_out2
+#			else:
+#				overall_success = False
+#		else:
+#			overall_success = False
+#			xbmc.log(msg='Unable to create the folder %(dir_from)s for libarchive extraction' % {'dir_from': os.path.join(xbmc.translatePath(directory_to),dd)}, level=xbmc.LOGDEBUG)
+#	return files_out, overall_success
 
 def Download(id, filename):
     """Called when subtitle download request from XBMC."""
@@ -418,12 +477,9 @@ def Download(id, filename):
     if os.path.isdir(_temp):shutil.rmtree(_temp)
     xbmcvfs.mkdirs(_temp)
     if not os.path.isdir(_temp):xbmcvfs.mkdir(_temp)
-    unpacked = str(uuid.uuid4())
-    unpacked = unpacked.replace("-","")
-    unpacked = unpacked[0:6]
-    xbmcvfs.mkdirs(_temp + "/" + unpacked)
-    _newtemp = xbmc.translatePath(os.path.join(_temp, unpacked))
-
+    unpacked = 'ldivx-' + str(uuid.uuid4()).replace("-","")[0:6]
+    xbmcvfs.mkdirs(pjoin(_temp,unpacked,''))
+    _newtemp = os.path.join(_temp, xbmc.translatePath(unpacked).replace('\\','/'))
 
     subtitles_list = []
     username = _addon.getSetting( 'LDuser' )
@@ -437,21 +493,22 @@ def Download(id, filename):
     content = my_opener.open(main_url + 'modules.php?name=Downloads&d_op=getit&lid=' + id + '&username=' + username)
     content = content.read()
     #### If user is not registered or User\Pass is misspelled it will generate an error message and break the script execution!
-    if 'Apenas Disponvel para utilizadores registados.' in content.decode('ISO-8859-1'):
-        xbmcplugin.endOfDirectory(int(sys.argv[1]))
+    if 'url=sair.php?referer=login' in content.decode('ISO-8859-1'):
         xbmc.executebuiltin(('Notification(%s,%s,%d)' % (_scriptname , _language(32019).encode('utf8'),5000)))
+        xbmcplugin.endOfDirectory(int(sys.argv[1]))
     if content.decode('ISO-8859-1') is not None:
         header = content[:4].decode('ISO-8859-1')
         if header == 'Rar!':
-            local_tmp_file = pjoin(_newtemp, str(uuid.uuid4())+".rar")
+            tmp_file = str(uuid.uuid4())+".rar"
+            local_tmp_file = pjoin(_temp, tmp_file)
             packed = True
         elif header == 'PK':
-            local_tmp_file = pjoin(_newtemp, str(uuid.uuid4())+".zip")
+            local_tmp_file = pjoin(_temp, str(uuid.uuid4())+".zip")
             packed = True
         else:
             # never found/downloaded an unpacked subtitles file, but just to be sure ...
             # assume unpacked sub file is an '.srt'
-            local_tmp_file = pjoin(_newtemp, "ldivx.srt")
+            local_tmp_file = pjoin(_temp, "ldivx.srt")
             subs_file = local_tmp_file
             packed = False
         log(u"Trying to save subtitles to '%s'" % (local_tmp_file,))
@@ -461,56 +518,25 @@ def Download(id, filename):
                 local_file_handle.write(content)
             local_file_handle.close()
             xbmc.sleep(500)
-        except: log(u"Failed to save subtitles to '%s'" % (local_tmp_file,))
+        except:
+            log(u"Failed to save subtitles to '%s'" % (local_tmp_file,))
         if packed:
-#            testelist = xbmc_walk(urllib.parse.quote_plus(xbmc.translatePath(local_tmp_file)))
-#            log(u"dirlist '%s'" % (testelist,))
             try:
-                src = 'rar' + '://' + quote_plus(local_tmp_file) + '/'
-                cdirs, cfiles = xbmcvfs.listdir(src)
-                log(u"CDIRS: '%s'" % cdirs)
-                log(u"CFILES: '%s'" % cfiles)
-                for cdir in cdirs:
-                    log(u"cdir: '%s'" % (cdir,))
-                    fsrc = '%s' % pjoin(_newtemp, cdir)
-                    log(u"fsrc: '%s'" % (fsrc,))
-                    xbmcvfs.mkdirs(fsrc)
-                for cfile in cfiles:
-                    log(u"inside for: '%s'" % (cfile,))
-                    ext = os.path.splitext(cfile)[1][1:].lower()
-                    if ext in SUB_EXTS:
-                        log(u"cfile: '%s'" % (cfile,))
-                        fsrc1 = '%s%s' % (src, quote_plus(cfile))
-                        #fsrc = '%s%s' % (src, quote_plus(cfile))
-                        log(u"fsrc1: '%s'" % (fsrc1,))
-                        dst = _newtemp + '/' + cfile
-                        log(u"dst: '%s'" % (dst,))
-                        xbmcvfs.copy(fsrc1, dst)
+                compressed_file = 'rar://' + quote_plus(local_tmp_file) + '/'
+                log(u"Will try to extract...")
+                xbmc_extract(compressed_file,_newtemp)
             except:
-                xbmc.executebuiltin("XBMC.Extract(%s, %s)" % (local_tmp_file.encode("utf-8"), _temp.encode("utf-8")), True)
-#            
-#            #xbmc.sleep(1000)
-#
-#            ## IF EXTRACTION FAILS, WHICH HAPPENS SOMETIMES ... BUG?? ... WE WILL BROWSE THE RAR FILE FOR MANUAL EXTRACTION ##
-            searchsubs = recursive_glob(_temp, SUB_EXTS)
+                xbmc.executebuiltin("XBMC.Extract(%s, %s)" % (compressed_file, _newtemp), True)
+            ## IF EXTRACTION FAILS, WHICH HAPPENS SOMETIMES ... BUG?? ... WE WILL BROWSE THE RAR FILE FOR MANUAL EXTRACTION ##
+            searchsubs = recursive_glob(_newtemp, SUB_EXTS)
             searchsubscount = len(searchsubs)
             if searchsubscount == 0:
-                log(u"here on '%s'" % (searchsubscount,))
-                log(u"_TEMP: '%s'" % (_temp,))
-                log(u"_NEWTEMP: '%s'" % (_newtemp,))
-                #_fucktemp = xbmc.translatePath(pjoin(_profile, 'temp\\'+unpacked))
-                _xtemp = xbmc.translatePath(os.path.join(_temp, unpacked))
-                log(u"_FUCKTEMP: '%s'" % (_xtemp,))
-#                os.remove(local_tmp_file)
                 dialog = xbmcgui.Dialog()
-                subs_file = dialog.browse(1, _language(32024).encode('utf8'), 'files', '', False, True, _temp+'/')
+                subs_file = dialog.browse(1, _language(32024).encode('utf8'), 'files', '', False, True, _temp + '/')
                 subtitles_list.append(subs_file)
-#            ## ELSE WE WILL GO WITH THE NORMAL PROCEDURE ##
+            ## ELSE WE WILL GO WITH THE NORMAL PROCEDURE ##
             else:
-                #log(u"Unpacked files in '%s'" % (_newtemp,))
                 os.remove(local_tmp_file)
-                #searchsubs = recursive_glob(_newtemp, SUB_EXTS)
-                #searchsubscount = len(searchsubs)
                 log(u"count: '%s'" % (searchsubscount,))
                 for file in searchsubs:
                     # There could be more subtitle files in _temp, so make
@@ -518,23 +544,21 @@ def Download(id, filename):
                     if searchsubscount == 1:
                         # unpacked file is a newly created subtitle file
                         log(u"Unpacked subtitles file '%s'" % (file,))
-                        try: subs_file = pjoin(_newtemp, file)
-                        except: subs_file = pjoin(_newtemp, file)
+                        try:
+                            subs_file = pjoin(_newtemp, file)
+                        except:
+                            log(u"Failed to load subtitle file '%s'" % (file,))
                         subtitles_list.append(subs_file)
                         break
                     else:
                     # If there are more than one subtitle in the temp dir, launch a browse dialog
                     # so user can choose.
-                        log(u"TEMP DIR IS in '%s'" % (_temp,))
                         dialog = xbmcgui.Dialog()
-                        subs_file = dialog.browse(1, _language(32024).encode('utf8'), 'files', '', False, True, _temp+'/')
+                        subs_file = dialog.browse(1, _language(32024).encode('utf8'), 'files', '', False, True, _newtemp + '/')
                         subtitles_list.append(subs_file)
                         break
         else: subtitles_list.append(subs_file)
     return subtitles_list
-
-#def normalizeString(str):
-#    return unicodedata.normalize('NFKD', unicode(unicode(str, 'utf-8'))).encode('ascii', 'ignore')
 
 def get_params():
     param = []
@@ -561,8 +585,6 @@ if params['action'] == 'search' or params['action'] == 'manualsearch':
     item['year']               = xbmc.getInfoLabel("VideoPlayer.Year")                           # Year
     item['season']             = str(xbmc.getInfoLabel("VideoPlayer.Season"))                    # Season
     item['episode']            = str(xbmc.getInfoLabel("VideoPlayer.Episode"))                   # Episode
-#    item['tvshow']             = normalizeString(xbmc.getInfoLabel("VideoPlayer.TVshowtitle"))   # Show
-#    item['title']              = normalizeString(xbmc.getInfoLabel("VideoPlayer.OriginalTitle")) # try to get original title
     item['tvshow']             = str(xbmc.getInfoLabel("VideoPlayer.TVshowtitle"))   # Show
     item['title']              = str(xbmc.getInfoLabel("VideoPlayer.OriginalTitle")) # try to get original title
     item['file_original_path'] = urllib.parse.unquote(xbmc.Player().getPlayingFile())  # Full path of a playing file

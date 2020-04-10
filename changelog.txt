@@ -1,3 +1,6 @@
+1.0.4
+- Fixed rar extraction thanks to Alwinus (vfs.rar) and Zach (extraction code).
+- All back to normal.
 1.0.3
 - Forget the past and welcome Python3
 - Ported with too much coffee and cigars!
