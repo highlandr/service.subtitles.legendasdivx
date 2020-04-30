@@ -146,16 +146,22 @@ def xbmc_extract(SRC, DEST):
             log("Extracting (back into the ff loop: '%s' to '%s'" % (now_SRC,now_DEST))
 
 def urlpost(query, lang, page):
-    postdata = urllib.urlencode({'query' : query, 'form_cat' : lang})
-    cj = cookielib.CookieJar()
-    my_opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    my_opener.addheaders = [('Referer', main_url + 'modules.php?name=Downloads&file=jz&d_op=search&op=_jz00&page='+ str(page))]
-    urllib2.install_opener(my_opener)
-    request = urllib2.Request(main_url + 'modules.php?name=Downloads&file=jz&d_op=search&op=_jz00&page='+ str(page), postdata)
-    log(u"POST url page: %s" % page)
-    log(u"POST url data: %s" % postdata)
+    username = _addon.getSetting( 'LDuser' )
+    password = _addon.getSetting( 'LDpass' )
+    login_postdata = urllib.parse.urlencode({'username' : username, 'password' : password, 'login' : 'Login', 'sid' : ''}).encode("utf-8")
+    cj = http.cookiejar.CookieJar()
+    my_opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+    urllib.request.install_opener(my_opener)
+    request = urllib.request.Request(main_url + 'forum/ucp.php?mode=login', login_postdata)
+    response = urllib.request.urlopen(request, None, 6.5).read().decode('ISO-8859-1')   
+    log("LOGIN_FIRST_OK?: %s" % response)
+    postdata = urllib.parse.urlencode({'query' : query, 'form_cat' : lang}).encode("utf-8")
+    request = urllib.request.Request(main_url + 'modules.php?name=Downloads&file=jz&d_op=search&op=_jz00&page='+ str(page), postdata)
+    log("POST url page: %s" % page)
+    log("POST url data: %s" % postdata)
     try:
-        response = urllib2.urlopen(request, None, 6.5).read()
+        response = urllib.request.urlopen(request, None, 6.5).read().decode('ISO-8859-1')
+        log("RESPONSE: %s" % response)
     except urllib2.URLError as e:
         response = ''
         xbmc.executebuiltin(('Notification(%s,%s,%d)' % (_scriptname , _language(32025).encode('utf8'),5000)))
