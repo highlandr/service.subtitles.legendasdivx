@@ -14,8 +14,8 @@
     <disclaimer lang="en_GB">highlander@teknorage.com</disclaimer>
     <disclaimer lang="pt_PT">highlander@teknorage.com</disclaimer>
     <language>pt en</language>
-	<news>v0.4.0  (2020-5-01) - Added login before search. Added origin\type of the subtitle.</news>
-	<news>v0.3.0  (2020-4-11) - Fixed rar extraction thanks to Alwinus (vfs.rar) and Zach-morris (extraction code).</news>
+	<news>v0.4.0  (2020-5-01) - Added login before search. Added origin\type of the subtitle.
+v0.3.0  (2020-4-11) - Fixed rar extraction thanks to Alwinus (vfs.rar) and Zach-morris (extraction code).</news>
     <platform>all</platform>
     <license>GPL-2.0-only</license>
     <forum>https://forum.kodi.tv/forumdisplay.php?fid=143</forum>
