@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Service LegendasDivx.com version 1.0.3
+# MATRIX ONLY!
 # Code based on Undertext (FRODO) service
 # Coded by HiGhLaNdR@OLDSCHOOL
 # Ported to Gotham by HiGhLaNdR@OLDSCHOOL
