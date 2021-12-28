@@ -1,6 +1,7 @@
 1.0.3
 - Forget the past and welcome Python3
 - Ported with too much coffee and cigars!
+- Matrix Only!
 0.2.9
 - Better search results.
 0.2.8
