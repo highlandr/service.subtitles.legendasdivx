@@ -1,4 +1,4 @@
-service.subtitles.legendasdivx
+service.subtitles.legendasdivx (v1.0.5)
 =========================
 
 LegendasDivx.com subtitle service plugin for XBMC 19 Matrix or newer.<br>
