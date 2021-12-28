@@ -100,7 +100,7 @@ HTTP_USER_AGENT = "User-Agent=Kodi 19 Matrix"
 Release: The.Dark.Knight.2008.720p.BluRay.DTS.x264-ESiR</td>
 """
 
-subtitle_pattern = "<div\sclass=\"sub_box\">.+?<div\sclass=\"sub_header\">.+?<b>(.+?)</b>\s\((\d\d\d\d)\)\s.+?name=User_Info&username=(.+?)'><b>.+?</div>.+?<table\sclass=\"sub_main\scolor1\"\scellspacing=\"0\">.+?<tr>.+?<th>CDs:</th>.+?<td>(.+?)</td>.+?<a\shref=\"\?name=Downloads&d_op=ratedownload&lid=(.+?)\">.+?<th\sclass=\"color2\">Hits:</th>.+?<td>(.+?)</td>.+?<td>(.+?)</td>.+?<td\scolspan=\"5\"\sclass=\"td_desc\sbrd_up\">(.*?)</td>.+?<td\sclass"
+subtitle_pattern = "<div\sclass=\"sub_box\">.+?<div\sclass=\"sub_header\">.+?<b>(.+?)</b>\s\((\d\d\d\d)\)\s.+?name=User_Info&username=(.+?)'><b>.+?</div>.+?<table\sclass=\"sub_main\scolor1\"\scellspacing=\"0\">.+?<tr>.+?<th>CDs:</th>.+?<td>(.+?)</td>.+?<a\shref=\"\?name=Downloads&d_op=ratedownload&lid=(.+?)\">.+?<th\sclass=\"color2\">Hits:</th>.+?<td>(.+?)<img.+?<td>(.+?)</td>.+?<td\scolspan=\"5\"\sclass=\"td_desc\sbrd_up\">(.*?)</td>.+?<td\sclass"
 release_pattern = "([^\W][\w\.]{1,}\w{1,}[\.]{1,1}[^\.|^\ |^\.org|^\.com|^\.net][^\Ws|^\.org|^\.com|^\.net][\w{1,}\.|\-|\(\d\d\d\d\)|\[\d\d\d\d\]]{3,}[^\Ws|^\.org|^\.com|^\.net][\w{3,}\-|\.{1,1}]\w{2,})"
 release_pattern1 = "([^\W][\w\ |\]|[]{4,}[^\Ws][x264|xvid|ac3]{1,}-[\w\[\]]{1,})"
 year_pattern = "(19|20)\d{2}$"
