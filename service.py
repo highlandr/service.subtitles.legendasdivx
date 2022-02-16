@@ -370,7 +370,7 @@ class Main:
             log("Search: Manual String = %s" % (searchstring,))
         else:
             if episode != '':
-                searchstring = "%s S%#02dE%#02d" % (title, int(season), int(episode))
+                searchstring = "%s S%#02dE%#02d" % (tvshow, int(season), int(episode))
                 log("Search: Title TV LIBRARY String = %s" % (searchstring,))
             elif title != '' and episode == '':
                 searchstring = '"' + title + ' ' + year + '"'
