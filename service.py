@@ -36,10 +36,10 @@ _version    = _addon.getAddonInfo('version')
 _language   = _addon.getLocalizedString
 _dialog     = xbmcgui.Dialog()
 
-_cwd        = xbmc.translatePath(_addon.getAddonInfo('path'))
-_profile    = xbmc.translatePath(_addon.getAddonInfo('profile'))
-_resource   = xbmc.translatePath(os.path.join(_cwd, 'resources', 'lib' ))
-_temp       = xbmc.translatePath(os.path.join(_profile, 'temp'))
+_cwd        = xbmcvfs.translatePath(_addon.getAddonInfo('path'))
+_profile    = xbmcvfs.translatePath(_addon.getAddonInfo('profile'))
+_resource   = xbmcvfs.translatePath(os.path.join(_cwd, 'resources', 'lib' ))
+_temp       = xbmcvfs.translatePath(os.path.join(_profile, 'temp'))
 
 if os.path.isdir(_temp):shutil.rmtree(_temp)
 xbmcvfs.mkdirs(_temp)
@@ -129,7 +129,7 @@ def xbmc_extract(SRC, DEST):
         ext = os.path.splitext(ff)[1][1:].lower()
         if ext in SUB_EXTS:
             src_file = pjoin(SRC,ff).replace('\\','/')
-            dst_file = pjoin(xbmc.translatePath(DEST),ff)
+            dst_file = pjoin(xbmcvfs.translatePath(DEST),ff)
             success = xbmcvfs.copy(src_file,dst_file)
             if not success:
                 log("Error extracting: '%s' to '%s'" % (src_file,dst_file))
@@ -452,7 +452,7 @@ class Main:
         if not os.path.isdir(_temp):xbmcvfs.mkdir(_temp)
         unpacked = 'ldivx-' + str(uuid.uuid4()).replace("-","")[0:6]
         xbmcvfs.mkdirs(pjoin(_temp,unpacked,''))
-        _newtemp = os.path.join(_temp, xbmc.translatePath(unpacked).replace('\\','/'))
+        _newtemp = os.path.join(_temp, xbmcvfs.translatePath(unpacked).replace('\\','/'))
 
         subtitles_list = []
         my_opener = login()
