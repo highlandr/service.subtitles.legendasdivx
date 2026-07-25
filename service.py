@@ -100,7 +100,7 @@ HTTP_USER_AGENT = "User-Agent=Kodi 18 Leia; Kodi 17; Kodi 16; Kodi 15"
 Release: The.Dark.Knight.2008.720p.BluRay.DTS.x264-ESiR</td>
 """
 
-subtitle_pattern = "<div\sclass=\"sub_box\">.+?<div\sclass=\"sub_header\">.+?<b>(.+?)</b>\s\((\d\d\d\d)\)\s.+?name=User_Info&username=(.+?)'><b>.+?</div>.+?<table\sclass=\"sub_main\scolor1\"\scellspacing=\"0\">.+?<tr>.+?<th>CDs:</th>.+?<td>(.+?)</td>.+?<a\shref=\"\?name=Downloads&d_op=ratedownload&lid=(.+?)\">.+?<th\sclass=\"color2\">Hits:</th>.+?<td>(.+?)</td>.+?<td>(.+?)</td>.+?<td>(.+?)</td>.+?<td\scolspan=\"5\"\sclass=\"td_desc\sbrd_up\">(.*?)</td><td\sclass=\"td_right\sbrd_up\scolor2\">"
+subtitle_pattern = "<div\sclass=\"sub_box\">.+?<div\sclass=\"sub_header\">.+?<b>(.+?)</b>\s\((\d\d\d\d)\)\s.+?name=User_Info&username=(.+?)'><b>.+?</div>.+?<table\sclass=\"sub_main\scolor1\"\scellspacing=\"0\">.+?<tr>.+?<th>CDs:</th>.+?<td>(.+?)</td>.+?<a\shref=\"\?name=Downloads&d_op=ratedownload&lid=(.+?)\">.+?<th\sclass=\"color2\">Hits:</th>.+?<td>([^\s]+).+?<td>(.+?)</td>.+?<td\scolspan=\"5\"\sclass=\"td_desc\sbrd_up\">(.*?)</td>.+?<td\sclass"
 release_pattern = "([^\W][\w\.]{1,}\w{1,}[\.]{1,1}[^\.|^\ |^\.org|^\.com|^\.net][^\Ws|^\.org|^\.com|^\.net][\w{1,}\.|\-|\(\d\d\d\d\)|\[\d\d\d\d\]]{3,}[^\Ws|^\.org|^\.com|^\.net][\w{3,}\-|\.{1,1}]\w{2,})"
 release_pattern1 = "([^\W][\w\ |\]|[]{4,}[^\Ws][x264|xvid|ac3]{1,}-[\w\[\]]{1,})"
 year_pattern = "(19|20)\d{2}$"
@@ -195,7 +195,7 @@ def getallsubs(searchstring, languageshort, languagelong, file_original_path, se
             downloads = int(matches.group(6)) / 200
             if (downloads > 5): downloads=5
             filename = string.strip(matches.group(1))
-            desc_ori = string.strip(matches.group(9))
+            desc_ori = string.strip(matches.group(8))
             desc_ori = re.sub('www.legendasdivx.com','',desc_ori)
             log(u"getallsubs: Original Decription = '%s'" % desc_ori.decode('utf8', 'ignore'))
             #Remove new lines on the commentaries
