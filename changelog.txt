@@ -1,3 +1,5 @@
+1.0.7
+- Code fix to sort issue with subtitles names when searching for download.
 1.0.6
 - Code fix to work in Nexus
 - Search speed up by TFOUTO

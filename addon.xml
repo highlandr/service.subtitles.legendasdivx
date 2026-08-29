@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="service.subtitles.legendasdivx"
        name="LegendasDivx.com"
-       version="1.0.6"
-       provider-name="HiGhLaNdeR">
+       version="1.0.8"
+       provider-name="HiGhLaNdeR (small fixes by Gemini AI)">
   <requires>
     <import addon="xbmc.python" version="3.0.0"/>
     <import addon="vfs.rar" version="3.3.0"/>	
@@ -16,6 +16,8 @@
     <disclaimer lang="pt_PT">highlander@teknorage.com</disclaimer>
     <language>pt en</language>
 	<news>
+	v1.0.8  (2026-8-08) - Second attempt. Hope it works...
+	v1.0.7  (2026-8-08) - First (failed) attemp to correct issue with subs names when trying to download a new sub.	
 	v1.0.6  (2023-4-24) - Fix for Nexus. Search speed up by TFOUTO.
 	v1.0.3  (2020-4-10) - Initial release. Fixed rar extraction thanks to Alwinus (vfs.rar) and Zach (extraction code).
 	</news>
